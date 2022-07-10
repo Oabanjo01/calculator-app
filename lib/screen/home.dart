@@ -2,9 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
-  Home({Key? key, required this.toggle}) : super(key: key);
+  Home({Key? key, required this.toggleDark, required this.toggleLight}) : super(key: key);
 
-  var toggle;
+  Function toggleDark;
+  Function toggleLight;
 
   @override
   State<Home> createState() => _HomeState();
@@ -170,7 +171,7 @@ class _HomeState extends State<Home> {
                 topRight: Radius.circular(20),
               ),
             ))),
-        onPressed: () => widget.toggle,
+        onPressed: () => widget.toggleLight,
         label: const Text(
           'Day',
         ),
@@ -192,7 +193,7 @@ class _HomeState extends State<Home> {
                 bottomLeft: Radius.circular(20),
               ),
             ))),
-        onPressed: () => widget.toggle,
+        onPressed: () => widget.toggleDark,
         label: const Text(
           'Night',
         ),

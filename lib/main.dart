@@ -7,27 +7,40 @@ void main () {
 }
 
 class CalculatorApp extends StatefulWidget {
-  const CalculatorApp({ Key? key }) : super(key: key);
+  CalculatorApp({ Key? key }) : super(key: key);
+
+  late bool isLight = true;
 
   @override
   State<CalculatorApp> createState() => _CalculatorAppState();
 }
 
-class _CalculatorAppState extends State<CalculatorApp> {
+class _CalculatorAppState extends State<CalculatorApp>{ 
 
-  bool isLight = false;
-
-  toggleTheme (bool value) {
+  toggleDarkTheme () {
     setState(() {
-      isLight = !isLight;
+      widget.isLight = false;
     });
   }
+
+  toggleLightTheme () {
+    setState(() {
+      widget.isLight = true;
+    });
+  }
+
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   toggleDarkTheme();
+  //   toggleDarkTheme();
+  // }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Home(toggle: toggleTheme,),
-      themeMode: isLight ? ThemeMode.light : ThemeMode.dark,
+      home: Home(toggleDark: toggleDarkTheme, toggleLight: toggleLightTheme,),
+      themeMode: widget.isLight ? ThemeMode.light : ThemeMode.dark,
       darkTheme: ThemeData(
         splashColor: Colors.white,
         scaffoldBackgroundColor: Colors.black,
