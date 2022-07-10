@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'screen/home.dart';
 
@@ -9,38 +10,57 @@ void main () {
 class CalculatorApp extends StatefulWidget {
   CalculatorApp({ Key? key }) : super(key: key);
 
-  late bool isLight = true;
-
   @override
   State<CalculatorApp> createState() => _CalculatorAppState();
 }
 
 class _CalculatorAppState extends State<CalculatorApp>{ 
 
-  toggleDarkTheme () {
+  int themeisLight = 0;
+
+  startingTheme () async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    if (pref.getInt('isLight') != null) {
+      themeisLight = pref.getInt('isLight')!;
+    } else {
+      pref.setInt('isLight', themeisLight);
+    }
     setState(() {
-      widget.isLight = false;
+      
     });
   }
 
-  toggleLightTheme () {
+  toggleTheme () async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    if (pref.getInt('isLight') == 1) {
+      pref.setInt('isLight', 0);
+      themeisLight = 0;
+    } else {
+      pref.setInt('isLight', 1);
+      themeisLight = 1;
+    }
     setState(() {
-      widget.isLight = true;
+      
     });
+  }
+  @override
+  void initState() {
+    startingTheme();
+    super.initState();
   }
 
   // @override
   // void didChangeDependencies() {
+  //   toggleTheme();
   //   super.didChangeDependencies();
-  //   toggleDarkTheme();
-  //   toggleDarkTheme();
   // }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Home(toggleDark: toggleDarkTheme, toggleLight: toggleLightTheme,),
-      themeMode: widget.isLight ? ThemeMode.light : ThemeMode.dark,
+      home: Home(toggle: toggleTheme,),
+      themeMode: themeisLight == 1 ? ThemeMode.light : ThemeMode.dark,
       darkTheme: ThemeData(
         splashColor: Colors.white,
         scaffoldBackgroundColor: Colors.black,

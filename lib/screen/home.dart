@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 class Home extends StatefulWidget {
-  Home({Key? key, required this.toggleDark, required this.toggleLight}) : super(key: key);
-
-  Function toggleDark;
-  Function toggleLight;
+  Home({Key? key, this.toggle}) : super(key: key);
+  var toggle;
 
   @override
   State<Home> createState() => _HomeState();
@@ -13,6 +12,8 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   var input = '0';
+
+  var solution = '';
 
   var output = '0';
 
@@ -28,10 +29,27 @@ class _HomeState extends State<Home> {
           input = '0';
         }
       } else if (buttonText == '=') {
-        output = input;
+        solution = input;
+        solution = solution.replaceAll('×', '*');
+
+        try{
+          Parser p = Parser();
+          Expression exp = p.parse(solution);
+
+          ContextModel cm = ContextModel();
+          output = "${exp.evaluate(EvaluationType.REAL, cm)}";
+        }catch(e){
+          output = "error";
+        }
+
+
       } else if (input == '0') {
           input = buttonText;
-      } else {
+      } else if (buttonText == '%') {
+        solution = input;
+        output = (int.parse(solution)/100).toString();
+      }
+      else {
         input += buttonText;
       }
     });
@@ -65,12 +83,14 @@ class _HomeState extends State<Home> {
                   left: size.width * 0.25,
                   child: Container(
                     height: size.height * 0.1,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        night_button(),
-                        day_button(),
-                      ],
+                    child: InkWell(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          night_button(),
+                          day_button(),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -157,46 +177,42 @@ class _HomeState extends State<Home> {
 
   void buttonPress() {}
 
-  InkWell day_button() {
-    return InkWell(
-      child: ElevatedButton.icon(
-        icon: const Icon(
-          Icons.wb_sunny_rounded,
-          color: Colors.amber,
-        ),
-        style: ButtonStyle(
-            shape: MaterialStateProperty.all(const RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-            ))),
-        onPressed: () => widget.toggleLight,
-        label: const Text(
-          'Day',
-        ),
+  Widget day_button() {
+    return ElevatedButton.icon(
+      icon: const Icon(
+        Icons.wb_sunny_rounded,
+        color: Colors.amber,
+      ),
+      style: ButtonStyle(
+          shape: MaterialStateProperty.all(const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomRight: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ))),
+      onPressed: widget.toggle,
+      label: const Text(
+        'Day',
       ),
     );
   }
 
-  InkWell night_button() {
-    return InkWell(
-      child: ElevatedButton.icon(
-        icon: const Icon(
-          Icons.nightlight,
-          color: Colors.black38,
-        ),
-        style: ButtonStyle(
-            shape: MaterialStateProperty.all(const RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20),
-                bottomLeft: Radius.circular(20),
-              ),
-            ))),
-        onPressed: () => widget.toggleDark,
-        label: const Text(
-          'Night',
-        ),
+  Widget night_button() {
+    return ElevatedButton.icon(
+      icon: const Icon(
+        Icons.nightlight,
+        color: Colors.black38,
+      ),
+      style: ButtonStyle(
+          shape: MaterialStateProperty.all(const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              bottomLeft: Radius.circular(20),
+            ),
+          ))),
+      onPressed: widget.toggle,
+      label: const Text(
+        'Night',
       ),
     );
   }
