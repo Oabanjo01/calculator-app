@@ -37,14 +37,17 @@ class _HomeState extends State<Home> {
           Expression exp = p.parse(solution);
 
           ContextModel cm = ContextModel();
-          output = "${exp.evaluate(EvaluationType.REAL, cm)}";
+          output = ("${exp.evaluate(EvaluationType.REAL, cm)}");
+          
         }catch(e){
-          output = "error";
+          output = "Error";
         }
 
 
-      } else if (input == '0') {
-          input = buttonText;
+      } else if (input == '.') {
+        input = '0.';
+      }else if (input == '0') {
+        input = buttonText;
       } else if (buttonText == '%') {
         solution = input;
         output = (int.parse(solution)/100).toString();
@@ -66,14 +69,13 @@ class _HomeState extends State<Home> {
               children: <Widget>[
                 SingleChildScrollView(
                   child: Container(
-                  padding: EdgeInsets.only(
-                    right: 10,
-                  ),
+                  padding: const EdgeInsets.only(left: 5, right: 5),
                     height: size.height * 0.36,
                     alignment: Alignment.bottomRight,
                     child: Text(
                       output,
                       style: TextStyle(
+                        overflow: TextOverflow.clip,
                         fontSize: 50
                       ),
                     )),
@@ -97,17 +99,21 @@ class _HomeState extends State<Home> {
               ]
             ),
             SizedBox(height: size.height * 0.025,),
-            Container(
-                width: size.width * 1,
-                height: size.height * 0.07,
-                padding: EdgeInsets.only(
-                  right: 10,
-                ),
-                child: Text(
-                  input,
-                  style: TextStyle(fontSize: 40),
-                  textAlign: TextAlign.end,
-                )),
+            Padding(
+              padding: const EdgeInsets.only(left: 5, right: 5),
+              child: Container(
+                  width: size.width * 1,
+                  height: size.height * 0.07,
+                  padding: EdgeInsets.only(
+                    right: 10,
+                  ),
+                  child: Text(
+                    input,
+                    style: TextStyle(fontSize: 40),
+                    textAlign: TextAlign.end,
+                    maxLines: 1
+                  )),
+            ),
             SizedBox(height: size.height * 0.025,),
             Expanded(
               child: Container(
