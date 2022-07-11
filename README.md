@@ -1,6 +1,6 @@
-# calculator_app. Still yet to get a concrete logic for the percentage key.
+# calculator_app. 
 
-A new Flutter project.
+A new Flutter project. Still yet to get a concrete logic for the percentage key.
 
 ## Getting Started
 
